@@ -158,8 +158,8 @@ const App = () => {
 
   return (
     <div className="container mx-auto p-4">
+      <div>
       <h1 className="text-3xl font-bold mb-4">Piano Controls</h1>
-
       <div id="oscillator-options" className="mt-8">
         <h2 className="text-xl font-bold mb-2">Oscillator</h2>
         <div className="flex flex-col">
@@ -173,7 +173,6 @@ const App = () => {
           <label htmlFor="sawtooth-wave">Sawtooth Wave</label>
         </div>
       </div>
-
       <div id="envelope-options" className="mt-8">
         <h2 className="text-xl font-bold mb-2">Envelope</h2>
         <label htmlFor="attack-control">Attack Time</label><br />
@@ -183,7 +182,6 @@ const App = () => {
         <label htmlFor="note-length-control">Note Length</label><br />
         <input type="range" id="note-length-control" className="block" min="0.2" max="2" step="0.05" value={noteLength} onChange={handleNoteLengthChange} /><br />
       </div>
-
       <div id="vibrato-options" className="mt-8">
         <h2 className="text-xl font-bold mb-2">Vibrato</h2>
         <label htmlFor="vibrato-amount-control">Vibrato Amount</label><br />
@@ -191,7 +189,6 @@ const App = () => {
         <label htmlFor="vibrato-speed-control">Vibrato Speed</label><br />
         <input type="range" id="vibrato-speed-control" className="block" min="0" max="30" step="0.5" value={vibratoSpeed} onChange={handleVibratoSpeedChange} /><br />
       </div>
-
       <div id="delay-options" className="mt-8">
         <h2 className="text-xl font-bold mb-2">Delay</h2>
         <label htmlFor="delay-time-control">Delay Time</label><br />
@@ -201,7 +198,7 @@ const App = () => {
         <label htmlFor="delay-amount-control">Delay Amount</label><br />
         <input id='delay-amount-control' type="range" className="block" min="0" max="1" step='0.05' value={delayAmount} onChange={handleDelayAmountChange} /><br />
       </div>
-
+      </div>
       <div id="piano-keys" className="mt-8">
         <h2 className="text-xl font-bold mb-2">Piano Keys</h2>
         <div className="flex flex-wrap justify-center">
