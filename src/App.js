@@ -26,20 +26,43 @@ const App = () => {
   const attackTimeRef = useRef(attackTime);
   const releaseTimeRef = useRef(releaseTime);
   const noteLengthRef = useRef(noteLength)
+  const vibratoAmountRef = useRef(vibratoAmount)
+  const vibratoSpeedRef = useRef(vibratoSpeed)
+  const delayTimeRef = useRef(delayTime)
+  const feedbackGainRef = useRef(feedbackGain)
+  const delayAmountRef = useRef(delayAmount)
+  // const selectedMIDIInputRef = useRef(selectedMIDIInput)
+  const midiInputRef = useRef(null); // Keep track of the current MIDI input
 
-  useEffect(()=>{
+  useEffect(() => {
     waveformRef.current = waveform
   })
-  useEffect(()=>{
+  useEffect(() => {
     attackTimeRef.current = attackTime
   })
-  useEffect(()=>{
+  useEffect(() => {
     releaseTimeRef.current = releaseTime
   })
 
-  useEffect(()=>{
+  useEffect(() => {
     noteLengthRef.current = noteLength
   })
+  useEffect(() => {
+    vibratoAmountRef.current = vibratoAmount
+  })
+  useEffect(() => {
+    vibratoSpeedRef.current = vibratoSpeed
+  })
+  useEffect(() => {
+    delayTimeRef.current = delayTime
+  })
+  useEffect(() => {
+    feedbackGainRef.current = feedbackGain
+  })
+  useEffect(() => {
+    delayAmountRef.current = delayAmount
+  })
+
 
   useEffect(() => {
     setupAudioContext();
@@ -100,15 +123,21 @@ const App = () => {
     contextRef.current.delayNode.connect(masterVolumeNode);
     contextRef.current.delayAmountGain.connect(contextRef.current.delayNode);
 
-    contextRef.current.delayNode.delayTime.value = delayTime;
-    contextRef.current.feedbackNode.gain.value = feedbackGain;
-    contextRef.current.delayAmountGain.gain.value = delayAmount;
+    contextRef.current.delayNode.delayTime.value = delayTimeRef.current;
+    contextRef.current.feedbackNode.gain.value = feedbackGainRef.current;
+    contextRef.current.delayAmountGain.gain.value = delayAmountRef.current;
   };
 
-  const setupMIDI = async (selecetedMIDI) => {
+  const setupMIDI = async (selectedMIDI) => {
     if (navigator.requestMIDIAccess) {
       try {
         const midiAccess = await navigator.requestMIDIAccess();
+
+        // Disconnect the previous MIDI input
+        if (midiInputRef.current) {
+          midiInputRef.current.onmidimessage = null;
+        }
+
         const inputs = [];
         const outputs = [];
 
@@ -119,8 +148,13 @@ const App = () => {
             name: input.name,
             version: input.version,
           });
-          input.onmidimessage = (message) =>
-            handleMIDIMessage(message);
+          // input.onmidimessage = (message) =>
+          //   handleMIDIMessage(message);
+          if (input.id === selectedMIDI.id) {
+            console.log("input",input.id)
+            input.onmidimessage = handleMIDIMessage;
+            midiInputRef.current = input; // Keep track of the current MIDI input
+          }
         }
 
         for (let output of midiAccess.outputs.values()) {
@@ -240,7 +274,7 @@ const App = () => {
     const lfo = audioContext.createOscillator();
 
     const frequency = keyFrequencies[note];
-    osc.type=waveformRef.current
+    osc.type = waveformRef.current
 
     osc.frequency.setValueAtTime(frequency, 0);
 
@@ -259,11 +293,11 @@ const App = () => {
       audioContext.currentTime + currentNoteLength
     );
 
-    lfo.frequency.setValueAtTime(vibratoSpeed, audioContext.currentTime);
+    lfo.frequency.setValueAtTime(vibratoSpeedRef.current, audioContext.currentTime);
     lfo.start(audioContext.currentTime);
     lfo.stop(audioContext.currentTime + currentNoteLength);
 
-    lfoGain.gain.setValueAtTime(vibratoAmount, audioContext.currentTime);
+    lfoGain.gain.setValueAtTime(vibratoAmountRef.current, audioContext.currentTime);
 
     osc.connect(noteGain);
     noteGain.connect(masterVolumeNode);
