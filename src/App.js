@@ -6,6 +6,7 @@ import DelayOptions from "./components/DelayOptions";
 import PianoKeys from "./components/PianoKeys";
 import MIDIPortsDisplay from "./components/MIDIPortsDisplay";
 import { keys, keyFrequencies } from "./keys/keys";
+import * as Tone from "tone";
 
 const App = () => {
   const [waveform, setWaveform] = useState("sine");
@@ -31,7 +32,6 @@ const App = () => {
   const delayTimeRef = useRef(delayTime)
   const feedbackGainRef = useRef(feedbackGain)
   const delayAmountRef = useRef(delayAmount)
-  // const selectedMIDIInputRef = useRef(selectedMIDIInput)
   const midiInputRef = useRef(null); // Keep track of the current MIDI input
 
   useEffect(() => {

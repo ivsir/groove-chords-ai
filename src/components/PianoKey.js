@@ -14,4 +14,3 @@ const PianoKey = ({ note, color, previousColor, playNote, stopNote }) => (
 );
 
 export default PianoKey;
-
